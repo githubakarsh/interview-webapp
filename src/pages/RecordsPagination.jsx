@@ -11,7 +11,6 @@ const RecordPagination = () => {
     apiCaller('http://localhost:3333/employees').then((list) => {
         let sl = [];
         if(list.length > 0) {
-            alert(list.length);
          sl = filterList(pageState.page, list);
         }
         setPageState({...pageState, employeeList : list, sortedList: sl});
