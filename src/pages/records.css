@@ -7,7 +7,7 @@
 }
 
 .records-list > li {
-    padding: 5px;
+    padding: 15px;
 }
 
 .records-list > li:nth-child(odd) {

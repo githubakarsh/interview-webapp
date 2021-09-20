@@ -2,13 +2,7 @@ import React, {useEffect, useState} from 'react';
 import useHelmet from '../hooks/useHelmet';
 import apiCaller from '../utils/apiCaller';
 import './records.css';
-
-const sortList = (page, list) => {
-    const start = 10*(page-1);
-    const end = (page*10);
-    const items = list?.slice(start, end);
-    return items;
-}
+import { filterList } from '../utils/common';
 
 const RecordPagination = () => {
     useHelmet("Records");
@@ -17,40 +11,53 @@ const RecordPagination = () => {
     apiCaller('http://localhost:3333/employees').then((list) => {
         let sl = [];
         if(list.length > 0) {
-         sl = sortList(pageState.page, list);
+            alert(list.length);
+         sl = filterList(pageState.page, list);
         }
         setPageState({...pageState, employeeList : list, sortedList: sl});
     });
     }, []);
 
     const handleButtonClick = (pageNum, e) => {
-        const sl = sortList(pageState.page, pageState.employeeList);
-        if(sl?.length > 0) {
-            setPageState({...pageState, page : pageNum, sortedList : sl});
+        setPageState({...pageState, sortedList : filterList(pageState.page, pageState.employeeList),page : pageNum});
+    }
+
+    const renderButtons = () => {
+        const arrayLength = pageState?.employeeList?.length;
+        const countButtons = Math.round(arrayLength/10);
+        let buttons = [];
+
+        if(arrayLength) {
+            for(let i = 0; i<=countButtons ; i++ ) {
+                buttons.push(i);                
+            }
         }
+
+        return <div>{
+            buttons.map(item => {
+                if(item > 0) {
+                    return <button onClick={(e) => handleButtonClick(item, e)}>{item}</button>
+                }
+            })    
+            }</div>
+        
     }
 
     const renderList = () => {
-        return pageState?.employeeList?.length > 0 ? 
+        return pageState?.sortedList?.length > 0 ? 
            <div> 
             <ul className="records-list">
                 {pageState.sortedList.map(data => {
                     return <li key={data.id}>{data.name}</li>
                 })}
             </ul>
-
-            <div>
-                <div>
-                    <button onClick={(e) => handleButtonClick(1, e)}>1</button>
-                    <button onClick={(e) => handleButtonClick(2, e)}>2</button>
-                    <button onClick={(e) => handleButtonClick(3, e)}>3</button>
-                </div>
             </div>
-            </div>
-        : <div>Loading ...... </div>
+        : <div> Loading............. </div>
     }
     return <>
         {renderList()}
+        {renderButtons()}
+
     </>
 }
 
