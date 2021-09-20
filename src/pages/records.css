@@ -1,0 +1,19 @@
+.records-list {
+    padding: 5px;
+    list-style-type: none;
+    border: 1px solid black;
+    margin: 20px;
+    width : 300px
+}
+
+.records-list > li {
+    padding: 5px;
+}
+
+.records-list > li:nth-child(odd) {
+    background-color: lightgray;
+}
+
+.records-list > li:nth-child(even) {
+    background-color: lightskyblue;
+}
